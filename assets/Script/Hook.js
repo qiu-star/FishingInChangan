@@ -8,6 +8,7 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 var Root = require("Root");
+// var Goods = require("Goods");
 
 cc.Class({
     extends: cc.Component,
@@ -93,6 +94,7 @@ cc.Class({
 
     afterRegain: function(){
         //清除鱼钩上的鱼
+        // console.log("child:"+this.mController.getChildren()[0]);
         this.mController.removeAllChildren(true);
         //继续可钓鱼模式
         this.isMoving = false;
@@ -101,7 +103,11 @@ cc.Class({
         //将池塘物品减1
         var pRoot = this.mRoot.getComponent(Root);
         pRoot.subGoodsNum();
-        console.log("GoodsNum:"+pRoot.mGoodsNum);
+
+        //加分
+        // GameData.instance.score += 375;
+//将生成的预制体存入数组，通过数组访问value
+        // console.log("GoodsNum:"+pRoot.mGoodsNum);
     },
 
     getIsRegaining: function(){

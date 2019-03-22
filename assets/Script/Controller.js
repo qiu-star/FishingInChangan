@@ -8,6 +8,8 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 var Hook = require("Hook");
+var GameData = require("GameData");
+var Goods = require("Goods");
 
 cc.Class({
     extends: cc.Component,
@@ -123,8 +125,16 @@ cc.Class({
         var oldPos = this.mHook.position;
         var direction = this.mMoveToPos.sub(oldPos).normalize();//获得移动方向
         direction.y = 0;
-
         var newPos = oldPos.add(direction.mul(this.mSpeed * dt));
+        //防止船越过边界
+        if(newPos.x < -277)
+        {
+            newPos.x = -277;
+        }
+        if(newPos.x > 270)
+        {
+            newPos.x = 270;
+        }
         this.mHook.setPosition(newPos);
         
         // oldPos = this.mBoat.position;
@@ -141,10 +151,24 @@ cc.Class({
         var children = pHook.node.getChildren();
         children[1].group = "default";//鱼钩设为不可碰撞
 
-        other.node.stopAllActions();
-        other.node.group = "default";
-        other.node.parent = this.node;//钓到的物品挂在钩子上
-        other.node.setPosition(cc.v2(0,-40));
-        other.node.runAction(cc.rotateTo(0.5, -60*other.node.scaleX));
+        var tmp = other.node.getComponent(cc.Label);
+        if(tmp == null)
+        {
+            other.node.stopAllActions();
+            other.node.group = "default";
+            other.node.parent = this.node;//钓到的物品挂在钩子上
+
+            //加分
+            var pGoods = other.node.getComponent(Goods);
+            GameData.instance.score += pGoods.mValue;
+            console.log("Score:"+ GameData.instance.score);
+
+            other.node.setPosition(cc.v2(0,-40));
+            other.node.runAction(cc.rotateTo(0.5, -60*other.node.scaleX));
+        }
+        else
+        {
+            console.log("TouchBound!");
+        }
     }
 });

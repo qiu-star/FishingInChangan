@@ -32,6 +32,11 @@ cc.Class({
             type : cc.Float,
             tooltip : "物品速度，默认为1，最小为0.1，最大为10",
             min : 0.1
+        },
+
+        mValue : {
+            default : 20,
+            type : cc.Integer
         }
     },
 
